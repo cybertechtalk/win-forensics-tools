@@ -37,6 +37,7 @@ parser = argparse.ArgumentParser(
 # Required arguments
 parser.add_argument("-f", "--file", type=str, required=True, help="Path to db file")
 parser.add_argument("-s", "--search", type=str, required=False, help="Search for table/view/column in database, match in name")
+parser.add_argument("-d", "--decode", action='store_true', help="Decode true/false")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
  
 # Read arguments from command line
@@ -79,13 +80,16 @@ def show_desc(dbname, entity):
 def show_content(entity, column):
     values = cur.execute('SELECT ' + column + ' FROM '+ entity)
     for val in values:
-        if val[0]:
-            try:
-                data = json.loads(val[0].decode())
-                content = data[0]['content']
-                print(f'    {data} {CBEIGE}|base64decode> {CBOLD}{CBLUE}{base64.b64decode(content).decode()} {CEND}')
-            except (UnicodeDecodeError, AttributeError):
-                print(f'    {val[0]} {CBEIGE}|base64decode> {CBOLD}{CBLUE}{base64.b64decode(val[0]).decode()} {CEND}')
+        if val[0] and (b'[]' not in val[0]):
+            if args.decode:
+                try:
+                    data = json.loads(val[0].decode())
+                    content = data[0]['content']
+                    print(f'    {data} {CBEIGE}|base64decode> {CBOLD}{CBLUE}{base64.b64decode(content).decode()} {CEND}')
+                except (UnicodeDecodeError, AttributeError):
+                    print(f'    {val[0]} {CBEIGE}|base64decode> {CBOLD}{CBLUE}{base64.b64decode(val[0]).decode()} {CEND}')
+            else:
+                print(f'    {val}')
 
 printif(f'{CBOLD}{CGREEN}[*] Load db content ...{CEND}')
 show_desc('sqlite_master', 'table')
