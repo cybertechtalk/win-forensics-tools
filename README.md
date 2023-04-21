@@ -17,7 +17,8 @@ The tool leverages sqlite3 for reading ActivitiesCache.db
         -h, --help            show this help message and exit
         -f FILE, --file FILE  Path to db file
         -s SEARCH, --search SEARCH
-                            Search for table/view/column in database, match in name
+                                Search for table/view/column in database, match in name
+        -d, --decode          Decode true/false
         -v, --verbose         Verbose true/false
     ````
     Powered by CyberTechTalk https://github.com/cybertechtalk
