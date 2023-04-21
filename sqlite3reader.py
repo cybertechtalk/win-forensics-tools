@@ -1,6 +1,8 @@
 import os
 import argparse
 import sqlite3
+import base64
+import json
 
 CBLACK  = '\33[30m'
 CRED    = '\33[31m'
@@ -71,37 +73,34 @@ def show_desc(dbname, entity):
         printif(f'{CYELLOW}[**] {entity} | {etty} {CEND}')
         columns = cur.execute('SELECT * FROM '+ etty)
         for col in columns.description:
-            printif(f'  [***] {etty} | {col[0]}')
+            printif(f'  {CBEIGE}[***] {etty} | {col[0]} {CEND}')
             data.append(Entity(entity, etty, col[0]))
 
 def show_content(entity, column):
     values = cur.execute('SELECT ' + column + ' FROM '+ entity)
     for val in values:
         if val[0]:
-            print(f'  [***] {column} | {val[0]}')
-            # if val['content']:
-            #     print(f'{CBOLD} {CBOLD} {val['content']} {CEND}')
-            # else:
-            #     print(f'{CBOLD} {CBOLD} {val[0]} {CEND}')
-            
+            try:
+                data = json.loads(val[0].decode())
+                content = data[0]['content']
+                print(f'    {data} {CBEIGE}|base64decode> {CBOLD}{CBLUE}{base64.b64decode(content).decode()} {CEND}')
+            except (UnicodeDecodeError, AttributeError):
+                print(f'    {val[0]} {CBEIGE}|base64decode> {CBOLD}{CBLUE}{base64.b64decode(val[0]).decode()} {CEND}')
+
+printif(f'{CBOLD}{CGREEN}[*] Load db content ...{CEND}')
 show_desc('sqlite_master', 'table')
-printif("\n")
 show_desc('sqlite_master', 'view')
 printif("\n")
 
 search = args.search
 if search:
     clipboard_payloads = []
-    print(f"{CBOLD} {CBLUE} [*] Search for {search} {CEND}")
+    print(f'{CBOLD}{CGREEN}[*] Searching for "{search}" {CEND}')
     for rec in data:
         if search in rec.column.lower():
             clipboard_payloads.append(rec)
-            print(f'{CGREEN} [**] {rec.entity} {rec.table}.{rec.column} {CEND}')
+            print(f' {CGREEN} [**] {rec.entity} {rec.table}.{rec.column} {CEND}')
             show_content(rec.table, rec.column)
     
-
-
-
-
 # Be sure to close the connection
 con.close()
