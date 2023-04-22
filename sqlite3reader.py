@@ -37,7 +37,7 @@ parser = argparse.ArgumentParser(
  
 # Required arguments
 parser.add_argument("-f", "--file", type=str, required=False, help="PATH to db file. Use --dir to SCAN MODE for *.db")
-parser.add_argument("--dir", type=str, required=False, help="SCAN MODE for *.db file, ex. %%APPDATA%%. Default location: C:\\Users")
+parser.add_argument("--dir", type=str, required=False, help="SCAN MODE for *.db file, ex. %%APPDATA%%. Default location: C:/Users")
 parser.add_argument("-s", "--search", type=str, required=False, help="Looking for db/table/view/column, match in name. Default: *cache*.\n If SCAN MODE searches for db name")
 parser.add_argument("-d", "--decode", action='store_true', help="Decode true/false")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
@@ -46,7 +46,24 @@ parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/f
 args = parser.parse_args()
 
 args.search = args.search if args.search else '*cache*'
-args.dir = args.dir + '\\**\\' + args.search + '.db' if args.dir else 'C:\\Users\\**\\' + args.search + '.db'
+args.dir = args.dir + '/**/' + args.search + '.db' if args.dir else 'C:/Users/**/' + args.search + '.db'
+
+
+class Entity:
+    def __init__(self, entity, table, column):
+        self.entity = entity
+        self.table = table
+        self.column = column
+data = []
+
+def insensitive_for_glob(string_file):
+    return ''.join(['[' + c.lower() + c.upper() + ']' if c.isalpha() else c for c in string_file])
+
+def printif(message, condition=args.verbose):
+    if condition:
+        print(message)
+
+
 
 for arg in vars(args): 
     print(f'{CBEIGE}{arg, getattr(args, arg)}{CEND}')
@@ -60,7 +77,7 @@ if args.file:
         exit()
 else:
     print(f'{CBOLD}{CYELLOW} Searching for {args.dir}{CEND}')
-    dbs = glob.glob(args.dir, recursive=True)
+    dbs = glob.glob(insensitive_for_glob(args.dir), recursive=True, include_hidden=True)
     if dbs == []: print(f'{CRED}no {args.dir} found{CEND}')
     for db in dbs: print(f'{CBOLD}{CGREEN}{db}{CEND}')
     exit()
@@ -70,17 +87,6 @@ con = sqlite3.connect(args.file)
 
 # creating cursor
 cur = con.cursor()
-
-class Entity:
-    def __init__(self, entity, table, column):
-        self.entity = entity
-        self.table = table
-        self.column = column
-data = []
-
-def printif(message, condition=args.verbose):
-    if condition:
-        print(message)
 
 def show_desc(dbname, entity):
 # reading all entities names
