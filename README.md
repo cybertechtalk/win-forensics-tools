@@ -1,4 +1,8 @@
-# sqlite3 cache db forensics with python3
+# Windows Forensics Tools
+
+Collection of windows forensics tools
+
+## sqlite3 cache db forensics with python3
 
 ````
 ****************************************************************
@@ -13,7 +17,7 @@
 ````
 The tool leverages sqlite3 for searching and reading *.db
 
-## How to use
+### How to use
 
 1. Pull the repo
 2. Locate %AppData%\Local\ConnectedDevicesPlatform\<UserProfile>\ActivitiesCache.db
