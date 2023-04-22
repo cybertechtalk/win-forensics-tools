@@ -3,6 +3,7 @@ import argparse
 import sqlite3
 import base64
 import json
+import glob
 
 CBLACK  = '\33[30m'
 CRED    = '\33[31m'
@@ -35,14 +36,20 @@ parser = argparse.ArgumentParser(
 )
  
 # Required arguments
-parser.add_argument("-f", "--file", type=str, required=False, help="Provide path to db file or use --dir to scan for *.db")
-parser.add_argument("--dir", type=str, required=False, help="Directory to search for db file")
-parser.add_argument("-s", "--search", type=str, required=False, help="Search for table/view/column in database, match in name")
+parser.add_argument("-f", "--file", type=str, required=False, help="Path to db file. Use --dir to SCAN MODE for *.db")
+parser.add_argument("--dir", type=str, required=False, help="Scan mode for *.db file, ex. %APPDATA%. Default location: C:\\Users")
+parser.add_argument("-s", "--search", type=str, required=False, help="Looking for db/table/view/column, match in name. Default: *cache*. If SCAN MODE searches for db name")
 parser.add_argument("-d", "--decode", action='store_true', help="Decode true/false")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
  
 # Read arguments from command line
 args = parser.parse_args()
+
+args.search = args.search if args.search else '*cache*'
+args.dir = args.dir + '\\**\\' + args.search + '.db' if args.dir else 'C:\\Users\\**\\' + args.search + '.db'
+
+for arg in vars(args): 
+    print(f'{CBEIGE}{arg, getattr(args, arg)}{CEND}')
 
 if args.file:
     if not os.path.exists(args.file):
@@ -52,8 +59,9 @@ if args.file:
         print("Not *.db file: % s" % args.file)
         exit()
 else:
-    dbs = [f for f in os.listdir(args.dir) if f.endswith('.db')]
-    print(f'{CBOLD}{CGREEN}{dbs}')
+    print(f'{CBOLD}{CYELLOW} Searching for {args.dir}{CEND}')
+    dbs = glob.glob(args.dir, recursive=True)
+    for db in dbs: print(f'{CBOLD}{CGREEN}{db}{CEND}')
     exit()
 
 # Create a SQL connection to our SQLite database
