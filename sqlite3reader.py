@@ -46,7 +46,7 @@ parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/f
 args = parser.parse_args()
 
 args.search = args.search if args.search else '*cache*'
-args.dir = args.dir + '/**/' + args.search + '.db' if args.dir else 'C:/Users/**/' + args.search + '.db'
+args.dir = args.file if args.file else args.dir + '/**/' + args.search + '.db' if args.dir else 'C:/Users/**/' + args.search + '.db'
 
 
 class Entity:
@@ -66,7 +66,7 @@ def printif(message, condition=args.verbose):
 
 
 for arg in vars(args): 
-    print(f'{CBEIGE}{arg, getattr(args, arg)}{CEND}')
+    printif(f'{CBEIGE}{arg, getattr(args, arg)}{CEND}')
 
 if args.file:
     if not os.path.exists(args.file):
