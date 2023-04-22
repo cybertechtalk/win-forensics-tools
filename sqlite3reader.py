@@ -35,7 +35,8 @@ parser = argparse.ArgumentParser(
 )
  
 # Required arguments
-parser.add_argument("-f", "--file", type=str, required=True, help="Path to db file")
+parser.add_argument("-f", "--file", type=str, required=False, help="Provide path to db file or use --dir to scan for *.db")
+parser.add_argument("--dir", type=str, required=False, help="Directory to search for db file")
 parser.add_argument("-s", "--search", type=str, required=False, help="Search for table/view/column in database, match in name")
 parser.add_argument("-d", "--decode", action='store_true', help="Decode true/false")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
@@ -43,11 +44,16 @@ parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/f
 # Read arguments from command line
 args = parser.parse_args()
 
-if not os.path.exists(args.file):
-    print("File doesn't exists: % s" % args.file)
-    exit()
-if not args.file.endswith('.db'):
-    print("Not *.db file: % s" % args.file)
+if args.file:
+    if not os.path.exists(args.file):
+        print("File doesn't exists: % s" % args.file)
+        exit()
+    if not args.file.endswith('.db'):
+        print("Not *.db file: % s" % args.file)
+        exit()
+else:
+    dbs = [f for f in os.listdir(args.dir) if f.endswith('.db')]
+    print(f'{CBOLD}{CGREEN}{dbs}')
     exit()
 
 # Create a SQL connection to our SQLite database
