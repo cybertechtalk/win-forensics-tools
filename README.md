@@ -38,6 +38,7 @@ The tool leverages sqlite3 for searching and reading *.db
                                 Looking for db/table/view/column, match in name. Default: *cache*. If SCAN MODE searches for db name
         -d, --decode          Decode true/false
         -v, --verbose         Verbose true/false
-    ````
-    Powered by CyberTechTalk https://github.com/cybertechtalk
-    Copyright of Andriej Sazanowicz, 2023
+ 
+    ````   
+Powered by CyberTechTalk https://github.com/cybertechtalk
+Copyright of Andriej Sazanowicz, 2023
