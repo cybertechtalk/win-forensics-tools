@@ -37,7 +37,7 @@ parser = argparse.ArgumentParser(
  
 # Required arguments
 parser.add_argument("-f", "--file", type=str, required=False, help="Path to db file. Use --dir to SCAN MODE for *.db")
-parser.add_argument("--dir", type=str, required=False, help="Scan mode for *.db file, ex. %APPDATA%. Default location: C:\\Users")
+parser.add_argument("--dir", type=str, required=False, help="Scan mode for *.db file, ex. %%APPDATA%%. Default location: C:\\Users")
 parser.add_argument("-s", "--search", type=str, required=False, help="Looking for db/table/view/column, match in name. Default: *cache*. If SCAN MODE searches for db name")
 parser.add_argument("-d", "--decode", action='store_true', help="Decode true/false")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
@@ -61,6 +61,7 @@ if args.file:
 else:
     print(f'{CBOLD}{CYELLOW} Searching for {args.dir}{CEND}')
     dbs = glob.glob(args.dir, recursive=True)
+    if dbs == []: print(f'{CRED}no {args.dir} found{CEND}')
     for db in dbs: print(f'{CBOLD}{CGREEN}{db}{CEND}')
     exit()
 
