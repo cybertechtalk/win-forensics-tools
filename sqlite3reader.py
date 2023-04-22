@@ -95,7 +95,7 @@ def show_desc(dbname, entity):
 def show_content(entity, column):
     values = cur.execute('SELECT ' + column + ' FROM '+ entity)
     for val in values:
-        if val[0] and (b'[]' not in val[0]):
+        if val[0]:
             if args.decode:
                 try:
                     data = json.loads(val[0].decode())
