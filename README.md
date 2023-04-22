@@ -1,12 +1,23 @@
-# ActivitiesCache.db Python3 Reader
+# sqlite3 db Python3 Reader
+****************************************************************
+           _ _ _       _____                    _           
+ ___  __ _| (_) |_ ___|___ / _ __ ___  __ _  __| | ___ _ __ 
+/ __|/ _` | | | __/ _ \ |_ \| '__/ _ \/ _` |/ _` |/ _ \ '__|
+\__ \ (_| | | | ||  __/___) | | |  __/ (_| | (_| |  __/ |   
+|___/\__, |_|_|\__\___|____/|_|  \___|\__,_|\__,_|\___|_|   
+        |_|                                                 
 
-The tool leverages sqlite3 for reading ActivitiesCache.db
+****************************************************************
+
+The tool leverages sqlite3 for searching and reading *.db
 
 ## How to use
 
 1. Pull the repo
 2. Locate %AppData%\Local\ConnectedDevicesPlatform\<UserProfile>\ActivitiesCache.db
 3. Run sqlite3reader.py -h
+4. Use SCAM MODE for looking for dbs. 
+5. Use -f and/or --search to search for specific columns
 
     ````
     usage: sqlite3reader [-h] -f FILE [-s SEARCH] [-v]
@@ -23,3 +34,4 @@ The tool leverages sqlite3 for reading ActivitiesCache.db
         -v, --verbose         Verbose true/false
     ````
     Powered by CyberTechTalk https://github.com/cybertechtalk
+    Copyright of Andriej Sazanowicz, 2023
