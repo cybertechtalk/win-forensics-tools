@@ -29,7 +29,7 @@ parser = argparse.ArgumentParser(
 # Required arguments
 parser.add_argument("-f", "--files", type=str, required=True, help="File PATH pattern. Ex. <dir>/**/*.txt, **/*file*.*")
 parser.add_argument("-m", "--mode", choices=['r', 'w'], required=True, help="-r: read mode; -w: write mode")
-parser.add_argument("-o", "--output", type=str, required=True, help="PATH to store hashes.csv")
+parser.add_argument("-o", "--output", type=str, required=True, help="PATH to store hasges. Ex. db.csv")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
  
 # Read arguments from command line
