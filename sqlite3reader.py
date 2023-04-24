@@ -5,16 +5,7 @@ import base64
 import json
 import glob
 
-CBLACK  = '\33[30m'
-CRED    = '\33[31m'
-CGREEN  = '\33[32m'
-CYELLOW = '\33[33m'
-CBLUE   = '\33[34m'
-CVIOLET = '\33[35m'
-CBEIGE  = '\33[36m'
-CWHITE  = '\33[37m'
-CEND    = '\033[0m'
-CBOLD   = '\033[1m'
+from shared.common import *
 
 print("\n****************************************************************")
 print(r"""           _ _ _       _____                    _           
@@ -56,14 +47,9 @@ class Entity:
         self.column = column
 data = []
 
-def insensitive_for_glob(string_file):
-    return ''.join(['[' + c.lower() + c.upper() + ']' if c.isalpha() else c for c in string_file])
-
 def printif(message, condition=args.verbose):
     if condition:
         print(message)
-
-
 
 for arg in vars(args): 
     printif(f'{CBEIGE}{arg, getattr(args, arg)}{CEND}')
