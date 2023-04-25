@@ -25,13 +25,14 @@ parser = argparse.ArgumentParser(
     description='Check if file been changed againts MD5 and SHA256 hash stored in csv',
     epilog='Powered by CyberTechTalk https://github.com/cybertechtalk'
 )
- 
+
+
 # Required arguments
-parser.add_argument("-f", "--files", type=str, required=True, help="File PATH pattern. Ex. <dir>/**/*.txt, **/*file*.*")
+parser.add_argument("-f", "--files", nargs='+', required=True, help="File PATH pattern. Ex. <dir>/**/*.txt, **/*file*.*")
 parser.add_argument("-m", "--mode", choices=['r', 'w'], required=True, help="-r: read mode; -w: write mode")
 parser.add_argument("-o", "--output", type=str, required=True, help="PATH to store hasges. Ex. db.csv")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose true/false")
- 
+
 # Read arguments from command line
 args = parser.parse_args()
 
@@ -54,18 +55,15 @@ for arg in vars(args):
 printif('-----------------------')
 
 
-#Getting list of files on disk
-list_of_files = glob.glob(insensitive_for_glob(args.files), recursive=True, include_hidden=True)
-
-if list_of_files == []:
+if args.files == []:
     print(f'{CRED}No files found in {args.files}{CEND}')
 else:
     printif(f'{CBOLD}{CBEIGE}Files found:{CEND}')
-    for f in list_of_files: printif(f'{CBEIGE}{f}{CEND}')
+    for f in args.files: printif(f'{CBEIGE}{f}{CEND}')
     printif('-----------------------')
 
 #Creating integrity source
-for f in list_of_files:
+for f in args.files:
     sum = hexdigest_sha256(f, args.verbose)
     files_on_disk.append(
         File(f, 
@@ -82,10 +80,10 @@ def read_db():
         with open(args.output, 'r') as db:
             files_in_db = list(csv.reader(db, delimiter=','))
         printif(f'{CBEIGE}{CBOLD}---- SELECT FROM {args.output} -----{CEND}')
-        if args.verbose: 
+        if args.verbose:
             for f in files_in_db:
                 print(f'{CBEIGE}{f}{CEND}')
-        printif(f'{CBEIGE}{CBOLD}------------------------{CEND}')
+        printif(f'{CBEIGE}{CBOLD}------- SELECT END --------{CEND}')
         return files_in_db
 
 def update_db():
@@ -96,7 +94,9 @@ def update_db():
     with open(args.output, 'w') as db:
         print(f'{CGREEN}Creating new {args.output}{CEND}')
         writer = csv.writer(db)
-        for f in files_on_disk: writer.writerow([f.file_name, f.sum, f.datetime, f.login])
+        for f in files_on_disk: 
+            writer.writerow([f.file_name, f.sum, f.datetime, f.login])
+        exit()
 
 def print_file(f, msg, color):
     print(f'{color}{msg}: {f.file_name, f.sum, f.datetime, f.login}{CEND}')
